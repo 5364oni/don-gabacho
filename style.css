@@ -1,0 +1,128 @@
+body {
+  background-color: #0b6623;
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+#game-area {
+  margin-top: 20px;
+}
+
+#score-area {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 22px;
+}
+
+.score-box {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 10px 16px;
+  border-radius: 10px;
+}
+
+#turn-area {
+  font-size: 28px;
+  margin: 15px;
+  color: gold;
+}
+
+#table-area {
+  font-size: 40px;
+  margin: 20px;
+}
+
+#number-area,
+#suit-area,
+#result-area {
+  font-size: 24px;
+  margin: 10px;
+}
+
+#result-area {
+  color: gold;
+  font-weight: bold;
+}
+
+#hand button {
+  width: 80px;
+  height: 120px;
+  margin: 5px;
+  font-size: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: gold;
+}
+
+#draw-button,
+#play-button,
+#don-button,
+#next-button,
+#new-round-button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#new-round-button {
+  background: gold;
+  font-weight: bold;
+}
+
+#cpu-area div {
+  margin: 10px;
+  font-size: 24px;
+}
+
+#suit-select {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 15px;
+  margin: 20px auto;
+  border-radius: 12px;
+  width: 320px;
+}
+
+#suit-select button {
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+  font-size: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+#log-area {
+  width: 90%;
+  max-width: 700px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+#log {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-size: 18px;
+}
+
+.log-line {
+  margin-bottom: 8px;
+}

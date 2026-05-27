@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ドン・ガバチョ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>ドン・ガバチョ</h1>
+
+  <div id="game-area">
+    <div id="score-area"></div>
+
+    <hr>
+
+    <div id="cpu-area">
+      <div id="cpu1">CPU1：5枚</div>
+      <div id="cpu2">CPU2：5枚</div>
+      <div id="cpu3">CPU3：5枚</div>
+    </div>
+
+    <hr>
+
+    <div id="turn-area">現在：あなた</div>
+    <div id="table-area">場札：なし</div>
+    <div id="number-area">場数字：0</div>
+    <div id="suit-area">指定マーク：なし</div>
+    <div id="result-area"></div>
+
+    <div id="suit-select" class="hidden">
+      <p>指定するマークを選んでください</p>
+      <button data-suit="♠">♠</button>
+      <button data-suit="♥">♥</button>
+      <button data-suit="♦">♦</button>
+      <button data-suit="♣">♣</button>
+    </div>
+
+    <hr>
+
+    <div id="player-area">
+      <h2>あなたの手札</h2>
+
+      <div id="hand"></div>
+
+      <br>
+
+      <button id="play-button">カードを出す</button>
+      <button id="draw-button">山札から引く</button>
+      <button id="don-button">ドン！</button>
+      <button id="next-button">次へ</button>
+      <button id="new-round-button" class="hidden">新しいラウンド</button>
+    </div>
+
+    <hr>
+
+    <div id="log-area">
+      <h2>ログ</h2>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
