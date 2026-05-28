@@ -401,11 +401,26 @@ function applyEffects(cards) {
     drawSuit = first.suit;
     drawNumber = first.number;
 
-    addLog(numberText(first.number) + "ドロー2 累積：" + drawPenalty + "枚");
+    addLog(
+      '<span class="' +
+      getSuitClass(first.suit) +
+      '">' +
+      numberText(first.number) +
+      "</span>" +
+      " ドロー2 累積：" +
+      drawPenalty +
+      "枚"
+    );
   }
 
   if (first.number === 11) {
-    addLog("J マーク指定：" + suitHtml(currentSuit));
+    addLog(
+      'J マーク指定：<span class="' +
+      getSuitClass(currentSuit) +
+      '">' +
+      currentSuit +
+      "</span>"
+    );
   }
 
   if (first.type === "joker") {
@@ -414,7 +429,11 @@ function applyEffects(cards) {
     drawSuit = null;
     drawNumber = 0;
 
-    addLog("Jokerドロー4 累積：" + drawPenalty + "枚");
+    addLog(
+      '<span class="card-joker">Joker</span> ドロー4 累積：' +
+      drawPenalty +
+      "枚"
+    );
   }
 }
 
