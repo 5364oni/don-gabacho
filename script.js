@@ -11,6 +11,8 @@ const DRAW_STATE = {
   ASKIP: "askip"
 };
 
+let cpuLevel = "normal";
+
 let currentRate = BASE_RATE;
 let deckLoop = 1;
 
@@ -55,6 +57,8 @@ const donButton = document.getElementById("don-button");
 const nextButton = document.getElementById("next-button");
 const newRoundButton = document.getElementById("new-round-button");
 
+const cpuLevelSelect = document.getElementById("cpu-level");
+
 const suitSelectArea = document.getElementById("suit-select");
 const suitButtons = document.querySelectorAll("#suit-select button");
 
@@ -66,8 +70,25 @@ newRoundButton.parentNode.appendChild(newGameButton);
 
 startGame();
 
+cpuLevelSelect.addEventListener("change", () => {
+  cpuLevel = cpuLevelSelect.value;
+
+  if (cpuLevel === "easy") {
+    addLog("CPU強さ：弱い");
+  }
+
+  if (cpuLevel === "normal") {
+    addLog("CPU強さ：普通");
+  }
+
+  if (cpuLevel === "hard") {
+    addLog("CPU強さ：強い");
+  }
+});
+
 playButton.addEventListener("click", () => {
   if (roundFinished) return;
+
   if (currentPlayerIndex !== 0) {
     alert("あなたの番ではありません");
     return;
@@ -105,15 +126,19 @@ playButton.addEventListener("click", () => {
 suitButtons.forEach(button => {
   button.addEventListener("click", () => {
     const selectedSuit = button.dataset.suit;
+
     suitSelectArea.classList.add("hidden");
+
     selectedCards = [...pendingJCards];
     pendingJCards = null;
+
     playSelectedCards(selectedSuit);
   });
 });
 
 drawButton.addEventListener("click", () => {
   if (roundFinished) return;
+
   if (currentPlayerIndex !== 0) {
     alert("あなたの番ではありません");
     return;
@@ -124,6 +149,7 @@ drawButton.addEventListener("click", () => {
 
 donButton.addEventListener("click", () => {
   if (roundFinished) return;
+
   tryDon(0);
 });
 
@@ -163,6 +189,7 @@ function startGame() {
   ];
 
   logArea.innerHTML = "";
+
   startRound();
 }
 
@@ -228,8 +255,17 @@ function createDeck() {
     }
   }
 
-  newDeck.push({ suit: "Joker", number: 0, type: "joker" });
-  newDeck.push({ suit: "Joker", number: 0, type: "joker" });
+  newDeck.push({
+    suit: "Joker",
+    number: 0,
+    type: "joker"
+  });
+
+  newDeck.push({
+    suit: "Joker",
+    number: 0,
+    type: "joker"
+  });
 
   return newDeck;
 }
@@ -265,7 +301,10 @@ function canPlayCard(card) {
   }
 
   if (drawState === DRAW_STATE.ASKIP) {
-    return card.number === 1 || card.type === "joker";
+    return (
+      card.number === 1 ||
+      card.type === "joker"
+    );
   }
 
   if (drawState === DRAW_STATE.DRAW4) {
@@ -344,6 +383,7 @@ function applyEffects(cards) {
     }
 
     const skipCount = cards.length;
+
     addLog("スキップ：" + skipCount + "人");
 
     for (let i = 0; i < skipCount; i++) {
@@ -442,23 +482,140 @@ function cpuAction() {
     return;
   }
 
-  const playable = player.hand.find(card => {
+  const playableCards = player.hand.filter(card => {
     return canPlayCard(card);
   });
 
-  if (playable) {
-    selectedCards = [playable];
-
-    if (playable.number === 11) {
-      playSelectedCards(suits[0]);
-    } else {
-      playSelectedCards(null);
-    }
-
+  if (playableCards.length === 0) {
+    executeDraw(player);
     return;
   }
 
-  executeDraw(player);
+  let selectedCard = chooseCpuCard(player, playableCards);
+
+  selectedCards = [selectedCard];
+
+  if (selectedCard.number === 11) {
+    playSelectedCards(chooseCpuSuit(player));
+  } else {
+    playSelectedCards(null);
+  }
+}
+
+function chooseCpuCard(player, playableCards) {
+  if (cpuLevel === "easy") {
+    return playableCards[
+      Math.floor(Math.random() * playableCards.length)
+    ];
+  }
+
+  if (cpuLevel === "normal") {
+    return chooseNormalCpuCard(playableCards);
+  }
+
+  if (cpuLevel === "hard") {
+    return chooseHardCpuCard(player, playableCards);
+  }
+
+  return playableCards[0];
+}
+
+function chooseNormalCpuCard(playableCards) {
+  const nonJoker = playableCards.filter(card => {
+    return card.type !== "joker";
+  });
+
+  if (nonJoker.length > 0) {
+    playableCards = nonJoker;
+  }
+
+  playableCards.sort((a, b) => {
+    return b.number - a.number;
+  });
+
+  return playableCards[0];
+}
+
+function chooseHardCpuCard(player, playableCards) {
+  let candidates = [...playableCards];
+
+  const nonJoker = candidates.filter(card => {
+    return card.type !== "joker";
+  });
+
+  if (nonJoker.length > 0) {
+    candidates = nonJoker;
+  }
+
+  const nonSpecial = candidates.filter(card => {
+    return (
+      card.number !== 1 &&
+      card.number !== 2 &&
+      card.number !== 8 &&
+      card.number !== 11
+    );
+  });
+
+  if (nonSpecial.length > 0) {
+    candidates = nonSpecial;
+  }
+
+  const safeCards = candidates.filter(card => {
+    return !wouldGiveDonChance(card);
+  });
+
+  if (safeCards.length > 0) {
+    candidates = safeCards;
+  }
+
+  candidates.sort((a, b) => {
+    return b.number - a.number;
+  });
+
+  return candidates[0];
+}
+
+function wouldGiveDonChance(card) {
+  const testNumber = card.number;
+
+  for (let i = 0; i < players.length; i++) {
+    if (i === currentPlayerIndex) continue;
+
+    const total = getHandTotal(players[i].hand);
+
+    if (total === testNumber) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function chooseCpuSuit(player) {
+  const suitCount = {
+    "♠": 0,
+    "♥": 0,
+    "♦": 0,
+    "♣": 0
+  };
+
+  player.hand.forEach(card => {
+    if (suitCount[card.suit] !== undefined) {
+      suitCount[card.suit]++;
+    }
+  });
+
+  let bestSuit = "♠";
+  let bestCount = -1;
+
+  suits.forEach(suit => {
+    if (suitCount[suit] > bestCount) {
+      bestSuit = suit;
+      bestCount = suitCount[suit];
+    }
+  });
+
+  return bestSuit;
 }
 
 function tryDon(playerIndex) {
@@ -482,12 +639,51 @@ function tryDon(playerIndex) {
     return;
   }
 
-  if (canDonGaeshi(playerIndex)) {
-    finishRound(tableNumberOwnerIndex, "ドン返し", 2, playerIndex);
+  const donPlayers = getDonPlayers();
+
+  resolveDonBattle(donPlayers, "ドン", 1);
+}
+
+function getDonPlayers() {
+  const donPlayers = [];
+
+  players.forEach((player, index) => {
+    if (index === tableNumberOwnerIndex) return;
+
+    const total = getHandTotal(player.hand);
+
+    if (total === tableNumber) {
+      donPlayers.push(index);
+    }
+  });
+
+  return donPlayers;
+}
+
+function resolveDonBattle(donPlayers, winType, baseMultiplier) {
+  if (donPlayers.length === 0) return;
+
+  const canCounter =
+    tableNumberOwnerIndex !== null &&
+    getHandTotal(players[tableNumberOwnerIndex].hand) === tableNumber;
+
+  if (canCounter) {
+    finishRound(
+      [tableNumberOwnerIndex],
+      winType + "返し",
+      baseMultiplier * 2,
+      donPlayers
+    );
+
     return;
   }
 
-  finishRound(playerIndex, "ドン", 1, tableNumberOwnerIndex);
+  finishRound(
+    donPlayers,
+    winType,
+    baseMultiplier,
+    [tableNumberOwnerIndex]
+  );
 }
 
 function canCpuDon(playerIndex) {
@@ -499,26 +695,22 @@ function canCpuDon(playerIndex) {
   return total === tableNumber;
 }
 
-function canDonGaeshi(donPlayerIndex) {
-  if (tableNumberOwnerIndex === null) return false;
-
-  const owner = players[tableNumberOwnerIndex];
-  const ownerTotal = getHandTotal(owner.hand);
-
-  return ownerTotal === tableNumber && donPlayerIndex !== tableNumberOwnerIndex;
-}
-
 function checkHikiDon(playerIndex) {
   if (!donNumberActive) return false;
+
   if (playerIndex === tableNumberOwnerIndex) return false;
 
   const total = getHandTotal(players[playerIndex].hand);
 
   if (total === tableNumber) {
-    if (canDonGaeshi(playerIndex)) {
-      finishRound(tableNumberOwnerIndex, "引きドン返し", 4, playerIndex);
+    const canCounter =
+      tableNumberOwnerIndex !== null &&
+      getHandTotal(players[tableNumberOwnerIndex].hand) === tableNumber;
+
+    if (canCounter) {
+      finishRound([tableNumberOwnerIndex], "引きドン返し", 4, [playerIndex]);
     } else {
-      finishRound(playerIndex, "引きドン", 2, tableNumberOwnerIndex);
+      finishRound([playerIndex], "引きドン", 2, [tableNumberOwnerIndex]);
     }
 
     return true;
@@ -527,53 +719,61 @@ function checkHikiDon(playerIndex) {
   return false;
 }
 
-function finishRound(winnerIndex, winType, winMultiplier, payerIndex) {
+function finishRound(winnerIndexes, winType, winMultiplier, payerIndexes) {
   roundFinished = true;
 
-  const winner = players[winnerIndex];
-  const payer = players[payerIndex];
+  let resultTexts = [];
 
-  let multiplier = winMultiplier;
+  winnerIndexes.forEach(winnerIndex => {
+    const winner = players[winnerIndex];
 
-  if (winnerIndex === parentIndex) {
-    multiplier *= 1.5;
-  }
+    let multiplier = winMultiplier;
 
-  const jokerCount = winner.hand.filter(card => {
-    return card.type === "joker";
-  }).length;
-
-  if (jokerCount > 0) {
-    multiplier *= Math.pow(2, jokerCount);
-  }
-
-  let totalCards = 0;
-
-  players.forEach((player, index) => {
-    if (index !== winnerIndex) {
-      totalCards += player.hand.length;
+    if (winnerIndex === parentIndex) {
+      multiplier *= 1.5;
     }
+
+    const jokerCount = winner.hand.filter(card => {
+      return card.type === "joker";
+    }).length;
+
+    if (jokerCount > 0) {
+      multiplier *= Math.pow(2, jokerCount);
+    }
+
+    let totalCards = 0;
+
+    players.forEach((player, index) => {
+      if (index !== winnerIndex) {
+        totalCards += player.hand.length;
+      }
+    });
+
+    const pay = Math.floor(totalCards * currentRate * multiplier);
+
+    payerIndexes.forEach(payerIndex => {
+      const payer = players[payerIndex];
+
+      if (!payer) return;
+      if (payerIndex === winnerIndex) return;
+
+      payer.score -= pay;
+      winner.score += pay;
+
+      addLog(payer.name + " → " + winner.name + "：" + pay + "点");
+    });
+
+    resultTexts.push(winner.name + " " + winType + " +" + pay + "点");
+
+    addLog(winner.name + " が " + winType);
+    addLog("倍率：" + multiplier + "倍");
+    addLog("残り手札合計：" + totalCards + "枚");
   });
-
-  const pay = Math.floor(totalCards * currentRate * multiplier);
-
-  payer.score -= pay;
-  winner.score += pay;
 
   resultArea.textContent =
     currentRound +
     "回戦終了：" +
-    winner.name +
-    " " +
-    winType +
-    " 勝利 +" +
-    pay +
-    "点";
-
-  addLog(winner.name + " が " + winType);
-  addLog("倍率：" + multiplier + "倍");
-  addLog("残り手札合計：" + totalCards + "枚");
-  addLog(payer.name + " が " + pay + "点支払い");
+    resultTexts.join(" / ");
 
   if (currentRound >= MAX_ROUNDS) {
     finishGame();
@@ -613,13 +813,12 @@ function afterAction() {
 function checkDonNotice() {
   if (!donNumberActive) return;
 
-  players.forEach((player, index) => {
-    if (index === tableNumberOwnerIndex) return;
+  const donPlayers = getDonPlayers();
 
-    if (getHandTotal(player.hand) === tableNumber) {
-      addLog(player.name + " はドン可能！");
-    }
-  });
+  if (donPlayers.length > 0) {
+    const names = donPlayers.map(index => players[index].name).join("、");
+    addLog(names + " はドン可能！");
+  }
 }
 
 function advanceTurn() {
