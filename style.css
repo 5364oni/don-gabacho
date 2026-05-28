@@ -142,10 +142,6 @@ hr {
   font-weight: bold;
 }
 
-#player-area h2 {
-  margin: 8px 0;
-}
-
 #hand {
   display: flex;
   justify-content: center;
@@ -166,7 +162,6 @@ hr {
   border: 3px solid #222;
   font-weight: bold;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-  transition: transform 0.12s, box-shadow 0.12s;
 }
 
 #hand button:disabled {
@@ -186,6 +181,18 @@ hr {
   color: purple;
   border-color: purple !important;
   background: #f4e9ff !important;
+}
+
+.log-line .card-red {
+  color: #ff4d4d !important;
+}
+
+.log-line .card-black {
+  color: #ffffff !important;
+}
+
+.log-line .card-joker {
+  color: violet !important;
 }
 
 .selected {
@@ -254,8 +261,18 @@ hr {
   cursor: pointer;
 }
 
+#suit-select button[data-suit="♥"],
+#suit-select button[data-suit="♦"] {
+  color: red;
+}
+
+#suit-select button[data-suit="♠"],
+#suit-select button[data-suit="♣"] {
+  color: black;
+}
+
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 #log-area {
@@ -283,6 +300,46 @@ hr {
 
 .log-line {
   margin-bottom: 6px;
+}
+
+#don-effect {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 90px;
+  font-weight: 900;
+  color: gold;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+  text-shadow:
+    4px 4px 0 crimson,
+    8px 8px 0 black;
+  animation: donPop 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes donPop {
+  0% {
+    transform: scale(0.2) rotate(-12deg);
+    opacity: 0;
+  }
+
+  25% {
+    transform: scale(1.25) rotate(5deg);
+    opacity: 1;
+  }
+
+  60% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5) rotate(8deg);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -369,24 +426,8 @@ hr {
     max-height: 150px;
     font-size: 14px;
   }
-}
-.log-line .card-red {
-  color: #ff4d4d !important;
-}
 
-.log-line .card-black {
-  color: #ffffff !important;
-}
-
-.log-line .card-joker {
-  color: violet !important;
-}
-#suit-select button[data-suit="♥"],
-#suit-select button[data-suit="♦"] {
-  color: red;
-}
-
-#suit-select button[data-suit="♠"],
-#suit-select button[data-suit="♣"] {
-  color: black;
+  #don-effect {
+    font-size: 64px;
+  }
 }
