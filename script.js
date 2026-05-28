@@ -277,17 +277,8 @@ function createDeck() {
     }
   }
 
-  newDeck.push({
-    suit: "Joker",
-    number: 0,
-    type: "joker"
-  });
-
-  newDeck.push({
-    suit: "Joker",
-    number: 0,
-    type: "joker"
-  });
+  newDeck.push({ suit: "Joker", number: 0, type: "joker" });
+  newDeck.push({ suit: "Joker", number: 0, type: "joker" });
 
   return newDeck;
 }
@@ -323,10 +314,7 @@ function canPlayCard(card) {
   }
 
   if (drawState === DRAW_STATE.ASKIP) {
-    return (
-      card.number === 1 ||
-      card.type === "joker"
-    );
+    return card.number === 1 || card.type === "joker";
   }
 
   if (drawState === DRAW_STATE.DRAW4) {
@@ -461,6 +449,8 @@ function applyEffects(cards) {
       drawPenalty +
       "枚"
     );
+
+    showJokerEffect();
   }
 }
 
@@ -523,6 +513,8 @@ function cpuAction() {
   if (roundFinished) return;
   if (currentPlayerIndex === 0) return;
 
+  clearCpuAutoTimer();
+
   const player = players[currentPlayerIndex];
 
   if (canCpuDon(currentPlayerIndex)) {
@@ -557,6 +549,12 @@ function runAutoCpuIfNeeded() {
   if (roundFinished) return;
   if (currentPlayerIndex === 0) return;
 
+  if (canHumanDon()) {
+    addLog("あなたはドン可能！ ドンするなら「ドン！」、見送るなら「次へ」");
+    updateAll();
+    return;
+  }
+
   const player = players[currentPlayerIndex];
 
   turnArea.textContent = player.name + " 思考中...";
@@ -567,9 +565,18 @@ function runAutoCpuIfNeeded() {
     if (!autoCpuMode) return;
     if (roundFinished) return;
     if (currentPlayerIndex === 0) return;
+    if (canHumanDon()) return;
 
     cpuAction();
   }, 800);
+}
+
+function canHumanDon() {
+  if (roundFinished) return false;
+  if (!donNumberActive) return false;
+  if (tableNumberOwnerIndex === 0) return false;
+
+  return getHandTotal(players[0].hand) === tableNumber;
 }
 
 function clearCpuAutoTimer() {
@@ -784,6 +791,8 @@ function chooseCpuSuit(player) {
 }
 
 function tryDon(playerIndex) {
+  clearCpuAutoTimer();
+
   if (!donNumberActive) {
     if (playerIndex === 0) {
       alert("この場数字でのドンは無効です");
@@ -861,6 +870,8 @@ function getDonPlayers() {
 }
 
 function resolveDonBattle(donPlayers, winType, baseMultiplier) {
+  clearCpuAutoTimer();
+
   if (donPlayers.length === 0) return;
 
   const canCounter =
@@ -903,6 +914,8 @@ function checkHikiDon(playerIndex) {
   const total = getHandTotal(players[playerIndex].hand);
 
   if (total === tableNumber) {
+    clearCpuAutoTimer();
+
     const canCounter =
       tableNumberOwnerIndex !== null &&
       getHandTotal(players[tableNumberOwnerIndex].hand) === tableNumber;
@@ -991,9 +1004,15 @@ function finishRound(winnerIndexes, winType, winMultiplier, payerIndexes) {
 }
 
 function showDonEffect(text) {
-  donEffectArea.textContent = text.includes("返し")
-    ? "返し!!"
-    : "DON!!";
+  donEffectArea.classList.remove("effect-counter");
+  donEffectArea.classList.remove("effect-joker");
+
+  if (text.includes("返し")) {
+    donEffectArea.textContent = "返し!!";
+    donEffectArea.classList.add("effect-counter");
+  } else {
+    donEffectArea.textContent = "DON!!";
+  }
 
   donEffectArea.classList.remove("hidden");
 
@@ -1003,6 +1022,25 @@ function showDonEffect(text) {
 
   setTimeout(() => {
     donEffectArea.classList.add("hidden");
+    donEffectArea.classList.remove("effect-counter");
+    donEffectArea.classList.remove("effect-joker");
+  }, 900);
+}
+
+function showJokerEffect() {
+  donEffectArea.classList.remove("effect-counter");
+  donEffectArea.classList.add("effect-joker");
+  donEffectArea.textContent = "JOKER!!";
+
+  donEffectArea.classList.remove("hidden");
+
+  donEffectArea.style.animation = "none";
+  void donEffectArea.offsetWidth;
+  donEffectArea.style.animation = "donPop 0.9s ease-out forwards";
+
+  setTimeout(() => {
+    donEffectArea.classList.add("hidden");
+    donEffectArea.classList.remove("effect-joker");
   }, 900);
 }
 
@@ -1105,6 +1143,7 @@ function updateAll() {
   updateScore();
   updateTurn();
   updateCPU();
+  updateDonButton();
 }
 
 function updateHand() {
@@ -1141,6 +1180,14 @@ function updateHand() {
 
     handArea.appendChild(button);
   });
+}
+
+function updateDonButton() {
+  if (canHumanDon()) {
+    donButton.classList.add("don-ready");
+  } else {
+    donButton.classList.remove("don-ready");
+  }
 }
 
 function getCardClass(card) {
@@ -1214,6 +1261,11 @@ function updateTable() {
 function updateTurn() {
   if (roundFinished) {
     turnArea.textContent = "ラウンド終了";
+    return;
+  }
+
+  if (canHumanDon() && currentPlayerIndex !== 0) {
+    turnArea.textContent = "ドン可能！ ドンするか、次へ";
     return;
   }
 
