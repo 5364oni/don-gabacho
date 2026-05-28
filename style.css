@@ -3,6 +3,8 @@ body {
   color: white;
   font-family: sans-serif;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
@@ -11,6 +13,7 @@ h1 {
 
 #game-area {
   margin-top: 20px;
+  padding: 0 10px;
 }
 
 #score-area {
@@ -25,6 +28,17 @@ h1 {
   background: rgba(0, 0, 0, 0.35);
   padding: 10px 16px;
   border-radius: 10px;
+}
+
+#cpu-level-area {
+  margin: 15px;
+  font-size: 20px;
+}
+
+#cpu-level {
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 8px;
 }
 
 #turn-area {
@@ -50,24 +64,52 @@ h1 {
   font-weight: bold;
 }
 
+#hand {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px auto;
+}
+
 #hand button {
   width: 80px;
   height: 120px;
-  margin: 5px;
+  margin: 4px;
   font-size: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
+  background: white;
+  border: 3px solid #222;
+  font-weight: bold;
+}
+
+.card-red {
+  color: red;
+}
+
+.card-black {
+  color: black;
+}
+
+.card-joker {
+  color: purple;
+  border-color: purple !important;
+  background: #f4e9ff !important;
 }
 
 .selected {
-  background-color: gold;
+  background-color: gold !important;
+  transform: translateY(-8px);
+  box-shadow: 0 0 12px gold;
 }
 
 #draw-button,
 #play-button,
 #don-button,
 #next-button,
-#new-round-button {
+#new-round-button,
+#new-game-button {
   margin: 10px;
   padding: 10px 20px;
   font-size: 20px;
@@ -75,7 +117,14 @@ h1 {
   cursor: pointer;
 }
 
-#new-round-button {
+#don-button {
+  background: crimson;
+  color: white;
+  font-weight: bold;
+}
+
+#new-round-button,
+#new-game-button {
   background: gold;
   font-weight: bold;
 }
@@ -125,4 +174,39 @@ h1 {
 
 .log-line {
   margin-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+  #hand {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
+  }
+
+  #hand button {
+    min-width: 70px;
+    height: 105px;
+    font-size: 18px;
+  }
+
+  #table-area {
+    font-size: 30px;
+  }
+
+  #number-area,
+  #suit-area,
+  #result-area {
+    font-size: 18px;
+  }
+
+  #draw-button,
+  #play-button,
+  #don-button,
+  #next-button,
+  #new-round-button,
+  #new-game-button {
+    font-size: 18px;
+    padding: 10px 14px;
+  }
 }
