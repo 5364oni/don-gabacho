@@ -42,15 +42,32 @@ hr {
   min-width: 110px;
 }
 
-#cpu-level-area {
+#setting-area {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
   margin: 10px auto;
+}
+
+#cpu-level-area,
+#auto-cpu-area {
   font-size: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 8px 14px;
+  border-radius: 10px;
 }
 
 #cpu-level {
   font-size: 17px;
   padding: 7px 12px;
   border-radius: 8px;
+}
+
+#auto-cpu {
+  transform: scale(1.3);
+  margin-right: 8px;
 }
 
 #role-area {
@@ -357,8 +374,14 @@ hr {
     padding: 7px 9px;
   }
 
-  #cpu-level-area {
-    font-size: 16px;
+  #setting-area {
+    gap: 8px;
+  }
+
+  #cpu-level-area,
+  #auto-cpu-area {
+    font-size: 15px;
+    padding: 7px 10px;
   }
 
   .role-list {
