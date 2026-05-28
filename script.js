@@ -50,6 +50,7 @@ const turnArea = document.getElementById("turn-area");
 const logArea = document.getElementById("log");
 const scoreArea = document.getElementById("score-area");
 const resultArea = document.getElementById("result-area");
+const donEffectArea = document.getElementById("don-effect");
 
 const drawButton = document.getElementById("draw-button");
 const playButton = document.getElementById("play-button");
@@ -769,6 +770,8 @@ function checkHikiDon(playerIndex) {
 function finishRound(winnerIndexes, winType, winMultiplier, payerIndexes) {
   roundFinished = true;
 
+  showDonEffect(winType);
+
   let resultTexts = [];
 
   winnerIndexes.forEach(winnerIndex => {
@@ -831,6 +834,22 @@ function finishRound(winnerIndexes, winType, winMultiplier, payerIndexes) {
   newGameButton.classList.remove("hidden");
 
   updateAll();
+}
+
+function showDonEffect(text) {
+  donEffectArea.textContent = text.includes("返し")
+    ? "返し!!"
+    : "DON!!";
+
+  donEffectArea.classList.remove("hidden");
+
+  donEffectArea.style.animation = "none";
+  void donEffectArea.offsetWidth;
+  donEffectArea.style.animation = "donPop 0.9s ease-out forwards";
+
+  setTimeout(() => {
+    donEffectArea.classList.add("hidden");
+  }, 900);
 }
 
 function finishGame() {
