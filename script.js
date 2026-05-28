@@ -895,6 +895,7 @@ function updateHand() {
     const button = document.createElement("button");
 
     button.textContent = cardText(card);
+    button.classList.add(getCardClass(card));
 
     if (selectedCards.includes(card)) {
       button.classList.add("selected");
@@ -918,6 +919,18 @@ function updateHand() {
 
     handArea.appendChild(button);
   });
+}
+
+function getCardClass(card) {
+  if (card.type === "joker") {
+    return "card-joker";
+  }
+
+  if (card.suit === "♥" || card.suit === "♦") {
+    return "card-red";
+  }
+
+  return "card-black";
 }
 
 function updateTable() {
