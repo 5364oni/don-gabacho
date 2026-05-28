@@ -405,7 +405,7 @@ function applyEffects(cards) {
   }
 
   if (first.number === 11) {
-    addLog("J マーク指定：" + currentSuit);
+    addLog("J マーク指定：" + suitText(currentSuit));
   }
 
   if (first.type === "joker") {
@@ -963,7 +963,7 @@ function getCardClass(card) {
 }
 
 function updateTable() {
-  tableArea.textContent = "場札：" + cardText(currentCard);
+  tableArea.innerHTML = "場札：" + cardHtml(currentCard);
   numberArea.textContent = "場数字：" + tableNumber;
 
   let stateText = "";
@@ -986,7 +986,7 @@ function updateTable() {
     penaltyText = " / ドロー累積：" + drawPenalty + "枚";
   }
 
-  suitArea.textContent =
+  suitArea.innerHTML =
     currentRound +
     "/" +
     MAX_ROUNDS +
@@ -999,7 +999,7 @@ function updateTable() {
     " / 山札：" +
     deck.length +
     "枚 / 指定：" +
-    currentSuit +
+    suitHtml(currentSuit) +
     " / 方向：" +
     getDirectionText() +
     stateText +
@@ -1071,6 +1071,37 @@ function cardText(card) {
   return card.suit + numberText(card.number);
 }
 
+function cardHtml(card) {
+  if (!card) return "";
+
+  if (card.type === "joker") {
+    return '<span class="card-joker">Joker</span>';
+  }
+
+  const className = getCardClass(card);
+
+  return '<span class="' + className + '">' + cardText(card) + "</span>";
+}
+
+function suitHtml(suit) {
+  if (!suit) return "なし";
+
+  if (suit === "Joker") {
+    return '<span class="card-joker">Joker</span>';
+  }
+
+  if (suit === "♥" || suit === "♦") {
+    return '<span class="card-red">' + suit + "</span>";
+  }
+
+  return '<span class="card-black">' + suit + "</span>";
+}
+
+function suitText(suit) {
+  if (!suit) return "なし";
+  return suit;
+}
+
 function getCardRoleText(card) {
   if (!card) return "";
 
@@ -1121,9 +1152,6 @@ function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
 
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
