@@ -230,8 +230,11 @@ function startRound() {
   addLog(currentRound + "回戦開始");
   addLog("親：" + players[parentIndex].name);
   addLog("最初の場札：" + cardText(currentCard));
+  addLog("場数字：" + tableNumber);
 
   updateAll();
+
+  checkOpeningDon();
 }
 
 function createDeck() {
@@ -638,6 +641,35 @@ function tryDon(playerIndex) {
   const donPlayers = getDonPlayers();
 
   resolveDonBattle(donPlayers, "ドン", 1);
+}
+
+function checkOpeningDon() {
+  if (roundFinished) return;
+
+  const openingDonPlayers = [];
+
+  players.forEach((player, index) => {
+    const total = getHandTotal(player.hand);
+
+    if (total === tableNumber) {
+      openingDonPlayers.push(index);
+    }
+  });
+
+  if (openingDonPlayers.length === 0) return;
+
+  const names = openingDonPlayers.map(index => players[index].name).join("、");
+
+  addLog("開幕ドン成立：" + names);
+
+  const payerIndexes = players.map((player, index) => index);
+
+  finishRound(
+    openingDonPlayers,
+    "開幕ドン",
+    5,
+    payerIndexes
+  );
 }
 
 function getDonPlayers() {
