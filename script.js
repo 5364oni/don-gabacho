@@ -12,6 +12,8 @@ const DRAW_STATE = {
 };
 
 let cpuLevel = "normal";
+let autoCpuMode = false;
+let cpuAutoTimer = null;
 
 let currentRate = BASE_RATE;
 let deckLoop = 1;
@@ -59,6 +61,7 @@ const nextButton = document.getElementById("next-button");
 const newRoundButton = document.getElementById("new-round-button");
 
 const cpuLevelSelect = document.getElementById("cpu-level");
+const autoCpuCheckbox = document.getElementById("auto-cpu");
 
 const suitSelectArea = document.getElementById("suit-select");
 const suitButtons = document.querySelectorAll("#suit-select button");
@@ -71,13 +74,31 @@ newRoundButton.parentNode.appendChild(newGameButton);
 
 startGame();
 
-cpuLevelSelect.addEventListener("change", () => {
-  cpuLevel = cpuLevelSelect.value;
+if (cpuLevelSelect) {
+  cpuLevelSelect.addEventListener("change", () => {
+    cpuLevel = cpuLevelSelect.value;
 
-  if (cpuLevel === "easy") addLog("CPU強さ：弱い");
-  if (cpuLevel === "normal") addLog("CPU強さ：普通");
-  if (cpuLevel === "hard") addLog("CPU強さ：強い");
-});
+    if (cpuLevel === "easy") addLog("CPU強さ：弱い");
+    if (cpuLevel === "normal") addLog("CPU強さ：普通");
+    if (cpuLevel === "hard") addLog("CPU強さ：強い");
+  });
+}
+
+if (autoCpuCheckbox) {
+  autoCpuCheckbox.addEventListener("change", () => {
+    autoCpuMode = autoCpuCheckbox.checked;
+
+    if (autoCpuMode) {
+      addLog("CPU自動進行：ON");
+      runAutoCpuIfNeeded();
+    } else {
+      addLog("CPU自動進行：OFF");
+      clearCpuAutoTimer();
+    }
+
+    updateAll();
+  });
+}
 
 playButton.addEventListener("click", () => {
   if (roundFinished) return;
@@ -171,6 +192,8 @@ newGameButton.addEventListener("click", () => {
 });
 
 function startGame() {
+  clearCpuAutoTimer();
+
   currentRound = 1;
   parentIndex = 0;
 
@@ -187,6 +210,8 @@ function startGame() {
 }
 
 function startRound() {
+  clearCpuAutoTimer();
+
   currentRate = BASE_RATE;
   deckLoop = 1;
 
@@ -236,6 +261,7 @@ function startRound() {
   updateAll();
 
   checkOpeningDon();
+  runAutoCpuIfNeeded();
 }
 
 function createDeck() {
@@ -494,6 +520,9 @@ function recycleDeck() {
 }
 
 function cpuAction() {
+  if (roundFinished) return;
+  if (currentPlayerIndex === 0) return;
+
   const player = players[currentPlayerIndex];
 
   if (canCpuDon(currentPlayerIndex)) {
@@ -510,15 +539,130 @@ function cpuAction() {
     return;
   }
 
-  let selectedCard = chooseCpuCard(player, playableCards);
+  selectedCards = chooseCpuCards(player, playableCards);
 
-  selectedCards = [selectedCard];
+  const topCard = selectedCards[selectedCards.length - 1];
 
-  if (selectedCard.number === 11) {
+  if (topCard.number === 11) {
     playSelectedCards(chooseCpuSuit(player));
   } else {
     playSelectedCards(null);
   }
+}
+
+function runAutoCpuIfNeeded() {
+  clearCpuAutoTimer();
+
+  if (!autoCpuMode) return;
+  if (roundFinished) return;
+  if (currentPlayerIndex === 0) return;
+
+  const player = players[currentPlayerIndex];
+
+  turnArea.textContent = player.name + " 思考中...";
+
+  cpuAutoTimer = setTimeout(() => {
+    cpuAutoTimer = null;
+
+    if (!autoCpuMode) return;
+    if (roundFinished) return;
+    if (currentPlayerIndex === 0) return;
+
+    cpuAction();
+  }, 800);
+}
+
+function clearCpuAutoTimer() {
+  if (cpuAutoTimer) {
+    clearTimeout(cpuAutoTimer);
+    cpuAutoTimer = null;
+  }
+}
+
+function chooseCpuCards(player, playableCards) {
+  const selectedCard = chooseCpuCard(player, playableCards);
+
+  const sameNumberCards = player.hand.filter(card => {
+    return card.number === selectedCard.number;
+  });
+
+  if (sameNumberCards.length <= 1) {
+    return [selectedCard];
+  }
+
+  let shouldMultiPlay = false;
+
+  if (cpuLevel === "easy") {
+    shouldMultiPlay = Math.random() < 0.15;
+  }
+
+  if (cpuLevel === "normal") {
+    shouldMultiPlay = Math.random() < 0.35;
+  }
+
+  if (cpuLevel === "hard") {
+    shouldMultiPlay = shouldHardCpuMultiPlay(selectedCard, sameNumberCards);
+  }
+
+  if (!shouldMultiPlay) {
+    return [selectedCard];
+  }
+
+  if (cpuLevel === "easy") {
+    return sameNumberCards.slice(0, 2);
+  }
+
+  if (cpuLevel === "normal") {
+    const maxCount = Math.random() < 0.75 ? 2 : 3;
+    return sameNumberCards.slice(0, maxCount);
+  }
+
+  return chooseHardMultiCards(selectedCard, sameNumberCards);
+}
+
+function shouldHardCpuMultiPlay(selectedCard, sameNumberCards) {
+  if (sameNumberCards.length <= 1) return false;
+
+  const oneCardNumber = selectedCard.number;
+
+  const allCardsNumber = sameNumberCards.reduce((sum, card) => {
+    return sum + card.number;
+  }, 0);
+
+  const oneCardDanger = wouldGiveDonChanceByNumber(oneCardNumber);
+  const allCardsDanger = wouldGiveDonChanceByNumber(allCardsNumber);
+
+  if (oneCardDanger && !allCardsDanger) return true;
+
+  if (
+    selectedCard.number !== 1 &&
+    selectedCard.number !== 2 &&
+    selectedCard.number !== 8 &&
+    selectedCard.number !== 11 &&
+    selectedCard.type !== "joker"
+  ) {
+    return Math.random() < 0.55;
+  }
+
+  return Math.random() < 0.25;
+}
+
+function chooseHardMultiCards(selectedCard, sameNumberCards) {
+  let bestCards = [selectedCard];
+
+  for (let count = 2; count <= sameNumberCards.length; count++) {
+    const testCards = sameNumberCards.slice(0, count);
+
+    const testNumber = testCards.reduce((sum, card) => {
+      return sum + card.number;
+    }, 0);
+
+    if (!wouldGiveDonChanceByNumber(testNumber)) {
+      bestCards = testCards;
+    }
+  }
+
+  return bestCards;
 }
 
 function chooseCpuCard(player, playableCards) {
@@ -595,14 +739,16 @@ function chooseHardCpuCard(player, playableCards) {
 }
 
 function wouldGiveDonChance(card) {
-  const testNumber = card.number;
+  return wouldGiveDonChanceByNumber(card.number);
+}
 
+function wouldGiveDonChanceByNumber(number) {
   for (let i = 0; i < players.length; i++) {
     if (i === currentPlayerIndex) continue;
 
     const total = getHandTotal(players[i].hand);
 
-    if (total === testNumber) {
+    if (total === number) {
       return true;
     }
   }
@@ -639,12 +785,18 @@ function chooseCpuSuit(player) {
 
 function tryDon(playerIndex) {
   if (!donNumberActive) {
-    alert("この場数字でのドンは無効です");
+    if (playerIndex === 0) {
+      alert("この場数字でのドンは無効です");
+    }
+
     return;
   }
 
   if (playerIndex === tableNumberOwnerIndex) {
-    alert("自分が出した場数字ではドンできません");
+    if (playerIndex === 0) {
+      alert("自分が出した場数字ではドンできません");
+    }
+
     return;
   }
 
@@ -768,6 +920,8 @@ function checkHikiDon(playerIndex) {
 }
 
 function finishRound(winnerIndexes, winType, winMultiplier, payerIndexes) {
+  clearCpuAutoTimer();
+
   roundFinished = true;
 
   showDonEffect(winType);
@@ -874,6 +1028,7 @@ function afterAction() {
   checkDonNotice();
   advanceTurn();
   updateAll();
+  runAutoCpuIfNeeded();
 }
 
 function checkDonNotice() {
@@ -1057,9 +1212,17 @@ function updateTable() {
 }
 
 function updateTurn() {
-  turnArea.textContent = roundFinished
-    ? "ラウンド終了"
-    : "現在：" + players[currentPlayerIndex].name;
+  if (roundFinished) {
+    turnArea.textContent = "ラウンド終了";
+    return;
+  }
+
+  if (autoCpuMode && currentPlayerIndex !== 0) {
+    turnArea.textContent = players[currentPlayerIndex].name + " 思考中...";
+    return;
+  }
+
+  turnArea.textContent = "現在：" + players[currentPlayerIndex].name;
 }
 
 function updateCPU() {
