@@ -370,3 +370,23 @@ hr {
     font-size: 14px;
   }
 }
+.log-line .card-red {
+  color: #ff4d4d !important;
+}
+
+.log-line .card-black {
+  color: #ffffff !important;
+}
+
+.log-line .card-joker {
+  color: violet !important;
+}
+#suit-select button[data-suit="♥"],
+#suit-select button[data-suit="♦"] {
+  color: red;
+}
+
+#suit-select button[data-suit="♠"],
+#suit-select button[data-suit="♣"] {
+  color: black;
+}
