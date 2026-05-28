@@ -73,17 +73,9 @@ startGame();
 cpuLevelSelect.addEventListener("change", () => {
   cpuLevel = cpuLevelSelect.value;
 
-  if (cpuLevel === "easy") {
-    addLog("CPU強さ：弱い");
-  }
-
-  if (cpuLevel === "normal") {
-    addLog("CPU強さ：普通");
-  }
-
-  if (cpuLevel === "hard") {
-    addLog("CPU強さ：強い");
-  }
+  if (cpuLevel === "easy") addLog("CPU強さ：弱い");
+  if (cpuLevel === "normal") addLog("CPU強さ：普通");
+  if (cpuLevel === "hard") addLog("CPU強さ：強い");
 });
 
 playButton.addEventListener("click", () => {
@@ -384,7 +376,7 @@ function applyEffects(cards) {
 
     const skipCount = cards.length;
 
-    addLog("スキップ：" + skipCount + "人");
+    addLog("Aスキップ：" + skipCount + "人");
 
     for (let i = 0; i < skipCount; i++) {
       advanceTurn();
@@ -397,7 +389,7 @@ function applyEffects(cards) {
       direction *= -1;
     }
 
-    addLog("リバース");
+    addLog("7リバース");
   }
 
   if (first.number === 2 || first.number === 8) {
@@ -406,7 +398,11 @@ function applyEffects(cards) {
     drawSuit = first.suit;
     drawNumber = first.number;
 
-    addLog("ドロー2 累積：" + drawPenalty + "枚");
+    addLog(numberText(first.number) + "ドロー2 累積：" + drawPenalty + "枚");
+  }
+
+  if (first.number === 11) {
+    addLog("J マーク指定：" + currentSuit);
   }
 
   if (first.type === "joker") {
@@ -895,6 +891,7 @@ function updateHand() {
     const button = document.createElement("button");
 
     button.textContent = cardText(card);
+    button.title = getCardRoleText(card);
     button.classList.add(getCardClass(card));
 
     if (selectedCards.includes(card)) {
@@ -1023,6 +1020,15 @@ function addLog(text) {
   logArea.prepend(div);
 }
 
+function numberText(number) {
+  if (number === 1) return "A";
+  if (number === 11) return "J";
+  if (number === 12) return "Q";
+  if (number === 13) return "K";
+
+  return String(number);
+}
+
 function cardText(card) {
   if (!card) return "";
 
@@ -1030,7 +1036,45 @@ function cardText(card) {
     return "Joker";
   }
 
-  return card.suit + card.number;
+  return card.suit + numberText(card.number);
+}
+
+function getCardRoleText(card) {
+  if (!card) return "";
+
+  if (card.type === "joker") {
+    return "Joker：ドロー4 / 数字0";
+  }
+
+  if (card.number === 1) {
+    return "A：スキップ / ドロー中は返し札";
+  }
+
+  if (card.number === 2) {
+    return "2：ドロー2";
+  }
+
+  if (card.number === 7) {
+    return "7：リバース";
+  }
+
+  if (card.number === 8) {
+    return "8：ドロー2";
+  }
+
+  if (card.number === 11) {
+    return "J：マーク指定";
+  }
+
+  if (card.number === 12) {
+    return "Q：通常カード";
+  }
+
+  if (card.number === 13) {
+    return "K：通常カード";
+  }
+
+  return "通常カード";
 }
 
 function cardsText(cards) {
@@ -1045,6 +1089,9 @@ function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
 
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
