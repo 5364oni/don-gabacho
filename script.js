@@ -229,7 +229,7 @@ function startRound() {
 
   addLog(currentRound + "回戦開始");
   addLog("親：" + players[parentIndex].name);
-  addLog("最初の場札：" + cardText(currentCard));
+  addLog("最初の場札：" + cardHtml(currentCard));
   addLog("場数字：" + tableNumber);
 
   updateAll();
@@ -353,7 +353,7 @@ function playSelectedCards(selectedSuit) {
   removeCardsFromHand(player, playedCards);
   sortHand(player.hand);
 
-  addLog(player.name + " は " + cardsText(playedCards) + " を出した");
+  addLog(player.name + " は " + cardsHtml(playedCards) + " を出した");
   addLog("場数字：" + tableNumber);
 
   applyEffects(playedCards);
@@ -405,7 +405,7 @@ function applyEffects(cards) {
   }
 
   if (first.number === 11) {
-    addLog("J マーク指定：" + suitText(currentSuit));
+    addLog("J マーク指定：" + suitHtml(currentSuit));
   }
 
   if (first.type === "joker") {
@@ -962,6 +962,18 @@ function getCardClass(card) {
   return "card-black";
 }
 
+function getSuitClass(suit) {
+  if (suit === "♥" || suit === "♦") {
+    return "card-red";
+  }
+
+  if (suit === "Joker") {
+    return "card-joker";
+  }
+
+  return "card-black";
+}
+
 function updateTable() {
   tableArea.innerHTML = "場札：" + cardHtml(currentCard);
   numberArea.textContent = "場数字：" + tableNumber;
@@ -1047,7 +1059,7 @@ function addLog(text) {
   const div = document.createElement("div");
 
   div.className = "log-line";
-  div.textContent = "・" + text;
+  div.innerHTML = "・" + text;
 
   logArea.prepend(div);
 }
@@ -1078,28 +1090,26 @@ function cardHtml(card) {
     return '<span class="card-joker">Joker</span>';
   }
 
-  const className = getCardClass(card);
-
-  return '<span class="' + className + '">' + cardText(card) + "</span>";
+  return (
+    '<span class="' +
+    getSuitClass(card.suit) +
+    '">' +
+    card.suit +
+    numberText(card.number) +
+    "</span>"
+  );
 }
 
 function suitHtml(suit) {
   if (!suit) return "なし";
 
-  if (suit === "Joker") {
-    return '<span class="card-joker">Joker</span>';
-  }
-
-  if (suit === "♥" || suit === "♦") {
-    return '<span class="card-red">' + suit + "</span>";
-  }
-
-  return '<span class="card-black">' + suit + "</span>";
-}
-
-function suitText(suit) {
-  if (!suit) return "なし";
-  return suit;
+  return (
+    '<span class="' +
+    getSuitClass(suit) +
+    '">' +
+    suit +
+    "</span>"
+  );
 }
 
 function getCardRoleText(card) {
@@ -1142,6 +1152,10 @@ function getCardRoleText(card) {
 
 function cardsText(cards) {
   return cards.map(card => cardText(card)).join("、");
+}
+
+function cardsHtml(cards) {
+  return cards.map(card => cardHtml(card)).join("、");
 }
 
 function getDirectionText() {
