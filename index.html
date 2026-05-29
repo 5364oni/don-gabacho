@@ -1,97 +1,270 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>ドン・ガバチョ</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <div id="don-effect" class="hidden">DON!!</div>
-
-  <h1>ドン・ガバチョ</h1>
 
   <div id="game-area">
+
+    <h1>ドン・ガバチョ</h1>
+
+    <!-- 点数 -->
     <div id="score-area"></div>
 
-    <hr>
+    <hr />
 
+    <!-- 設定 -->
     <div id="setting-area">
+
       <div id="cpu-level-area">
-        <span>CPU強さ：</span>
+        CPU強さ：
+
         <select id="cpu-level">
-          <option value="easy">弱い</option>
-          <option value="normal" selected>普通</option>
-          <option value="hard">強い</option>
+          <option value="easy">
+            弱い
+          </option>
+
+          <option
+            value="normal"
+            selected
+          >
+            普通
+          </option>
+
+          <option value="hard">
+            強い
+          </option>
         </select>
       </div>
 
       <div id="auto-cpu-area">
         <label>
-          <input type="checkbox" id="auto-cpu">
+          <input
+            type="checkbox"
+            id="auto-cpu"
+          />
+
           CPU自動進行
         </label>
       </div>
+
     </div>
 
+    <!-- 役 -->
     <div id="role-area">
+
       <h2>役札</h2>
+
       <div class="role-list">
-        <div><strong>A</strong>：スキップ / ドロー中は返し札</div>
-        <div><strong>2</strong>：ドロー2</div>
-        <div><strong>7</strong>：リバース</div>
-        <div><strong>8</strong>：ドロー2</div>
-        <div><strong>J</strong>：マーク指定</div>
-        <div><strong>Joker</strong>：ドロー4 / 数字0</div>
+
+        <div>
+          A：スキップ / ドロー中は返し札
+        </div>
+
+        <div>
+          2：ドロー2
+        </div>
+
+        <div>
+          7：リバース
+        </div>
+
+        <div>
+          8：ドロー2
+        </div>
+
+        <div>
+          J：マーク指定
+        </div>
+
+        <div>
+          Joker：ドロー4 / 数字0
+        </div>
+
       </div>
+
     </div>
 
-    <div id="cpu-area">
-      <div id="cpu1">CPU1：5枚</div>
-      <div id="cpu2">CPU2：5枚</div>
-      <div id="cpu3">CPU3：5枚</div>
+    <!-- 現在 -->
+    <div id="turn-area"></div>
+
+    <!-- 卓 -->
+<div id="table-center">
+
+  <!-- CPU上 -->
+  <div
+    id="cpu-top"
+    class="cpu-seat"
+  >
+
+    <div
+      class="cpu-name"
+      id="cpu2-name"
+    >
+      CPU2
     </div>
 
-    <hr>
+    <div
+      class="cpu-cards cpu-top-cards"
+      id="cpu2-cards"
+    ></div>
 
-    <div id="turn-area">現在：あなた</div>
-    <div id="table-area">場札：なし</div>
-    <div id="number-area">場数字：0</div>
-    <div id="suit-area">指定マーク：なし</div>
-    <div id="result-area"></div>
-
-    <div id="suit-select" class="hidden">
-      <p>指定するマークを選んでください</p>
-      <button data-suit="♠">♠</button>
-      <button data-suit="♥">♥</button>
-      <button data-suit="♦">♦</button>
-      <button data-suit="♣">♣</button>
-    </div>
-
-    <hr>
-
-    <div id="player-area">
-      <h2>あなたの手札</h2>
-
-      <div id="hand"></div>
-
-      <br>
-
-      <button id="play-button">カードを出す</button>
-      <button id="draw-button">山札から引く</button>
-      <button id="don-button">ドン！</button>
-      <button id="next-button">次へ</button>
-      <button id="new-round-button" class="hidden">次のラウンドへ</button>
-    </div>
-
-    <hr>
-
-    <div id="log-area">
-      <h2>ログ</h2>
-      <div id="log"></div>
-    </div>
   </div>
 
+  <!-- CPU左 -->
+  <div
+    id="cpu-left"
+    class="cpu-seat"
+  >
+
+    <div
+      class="cpu-name"
+      id="cpu1-name"
+    >
+      CPU1
+    </div>
+
+    <div
+      class="cpu-cards cpu-left-cards"
+      id="cpu1-cards"
+    ></div>
+
+  </div>
+
+  <!-- CPU右 -->
+  <div
+    id="cpu-right"
+    class="cpu-seat"
+  >
+
+    <div
+      class="cpu-name"
+      id="cpu3-name"
+    >
+      CPU3
+    </div>
+
+    <div
+      class="cpu-cards cpu-right-cards"
+      id="cpu3-cards"
+    ></div>
+
+  </div>
+
+  <!-- 中央 -->
+  <div id="table-area"></div>
+
+</div>
+    <!-- プレイヤー -->
+    <div id="player-area">
+
+      <div id="number-area"></div>
+
+      <div id="suit-area"></div>
+
+      <div id="result-area"></div>
+
+      <!-- 手札 -->
+      <div id="hand"></div>
+
+      <!-- ボタン -->
+      <div id="button-area">
+
+        <button id="play-button">
+          出す
+        </button>
+
+        <button id="draw-button">
+          引く
+        </button>
+
+        <button id="don-button">
+          ドン！
+        </button>
+
+        <button id="next-button">
+          次へ
+        </button>
+
+        <button
+          id="new-round-button"
+          class="hidden"
+        >
+          次ラウンド
+        </button>
+
+        <button
+          id="new-game-button"
+          class="hidden"
+        >
+          新しいゲーム
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- マーク選択 -->
+    <div
+      id="suit-select"
+      class="hidden"
+    >
+
+      <h2>
+        マークを選択
+      </h2>
+
+      <button data-suit="♠">
+        ♠
+      </button>
+
+      <button data-suit="♥">
+        ♥
+      </button>
+
+      <button data-suit="♦">
+        ♦
+      </button>
+
+      <button data-suit="♣">
+        ♣
+      </button>
+
+    </div>
+
+    <!-- ログ -->
+    <div id="log-area">
+
+      <h2>
+        ログ
+      </h2>
+
+      <div id="log"></div>
+
+    </div>
+
+  </div>
+
+  <!-- JS -->
+
+  <script src="rules.js"></script>
+
+  <script src="effects.js"></script>
+
+  <script src="cpu.js"></script>
+
   <script src="script.js"></script>
+
 </body>
 </html>
