@@ -1261,3 +1261,12 @@ function shuffle(array) {
       [array[j], array[i]];
   }
 }
+window.addEventListener("load", () => {
+  alert(
+    "読み込み確認\n" +
+    "showJokerEffect: " + typeof showJokerEffect + "\n" +
+    "showSkipEffect: " + typeof showSkipEffect + "\n" +
+    "showDraw2Effect: " + typeof showDraw2Effect + "\n" +
+    "showReverseEffect: " + typeof showReverseEffect
+  );
+});
