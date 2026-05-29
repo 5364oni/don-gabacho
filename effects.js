@@ -268,3 +268,45 @@
 
 </body>
 </html>
+/* =========================
+   スマホ対応：演出強制表示
+========================= */
+
+function showBigEffect(text, effectClass) {
+  const effect = getEffectArea();
+
+  effect.className = "";
+  effect.classList.add(effectClass);
+
+  effect.textContent = text;
+
+  effect.style.display = "block";
+  effect.style.position = "fixed";
+  effect.style.left = "50%";
+  effect.style.top = "42%";
+  effect.style.transform = "translate(-50%, -50%) scale(0.2)";
+  effect.style.zIndex = "99999999";
+  effect.style.fontSize = window.innerWidth <= 768 ? "42px" : "72px";
+  effect.style.fontWeight = "900";
+  effect.style.pointerEvents = "none";
+  effect.style.opacity = "0";
+  effect.style.textShadow =
+    "0 0 12px white, 0 0 24px white, 4px 4px 0 black";
+  effect.style.transition =
+    "transform 0.2s ease-out, opacity 0.2s ease-out";
+
+  requestAnimationFrame(() => {
+    effect.style.opacity = "1";
+    effect.style.transform = "translate(-50%, -50%) scale(1.25)";
+  });
+
+  setTimeout(() => {
+    effect.style.transform = "translate(-50%, -50%) scale(1.6)";
+    effect.style.opacity = "0";
+  }, 650);
+
+  setTimeout(() => {
+    effect.className = "hidden";
+    effect.style.display = "none";
+  }, 950);
+}
