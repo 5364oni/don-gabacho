@@ -1428,3 +1428,143 @@ hr {
     font-size: 42px !important;
   }
 }
+/* =========================
+   スマホ表示 再調整
+   役札・設定・ログを残す
+========================= */
+
+@media (max-width: 768px) {
+  h1,
+  #score-area,
+  #setting-area,
+  #role-area,
+  #log-area {
+    display: block !important;
+  }
+
+  h1 {
+    font-size: 24px !important;
+    margin: 6px 0 !important;
+  }
+
+  #score-area {
+    display: flex !important;
+    gap: 4px !important;
+    margin: 4px auto !important;
+    font-size: 11px !important;
+  }
+
+  .score-box {
+    min-width: auto !important;
+    padding: 5px 7px !important;
+    font-size: 11px !important;
+  }
+
+  #setting-area {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 6px !important;
+    margin: 4px auto !important;
+    font-size: 12px !important;
+  }
+
+  #cpu-level-area,
+  #auto-cpu-area {
+    padding: 5px 7px !important;
+  }
+
+  #cpu-level {
+    font-size: 12px !important;
+    padding: 2px 4px !important;
+  }
+
+  #role-area {
+    width: 94% !important;
+    padding: 6px !important;
+    margin: 4px auto !important;
+    font-size: 11px !important;
+  }
+
+  #role-area h2 {
+    font-size: 15px !important;
+    margin: 2px 0 5px !important;
+  }
+
+  .role-list {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 4px !important;
+  }
+
+  .role-list div {
+    padding: 4px 5px !important;
+  }
+
+  #table-center {
+    height: 410px !important;
+    margin-top: 0 !important;
+    transform: none !important;
+  }
+
+  #cpu-top {
+    top: 4px !important;
+  }
+
+  #cpu-left,
+  #cpu-right {
+    top: 45% !important;
+  }
+
+  #table-area {
+    top: 50% !important;
+  }
+
+  #player-area {
+    margin-top: -20px !important;
+  }
+
+  #number-area {
+    font-size: 24px !important;
+    margin: 2px auto !important;
+  }
+
+  #suit-area {
+    width: 94% !important;
+    font-size: 12px !important;
+    padding: 6px !important;
+    margin: 2px auto !important;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  #hand {
+    margin: 2px auto !important;
+    padding: 6px 0 8px 14px !important;
+  }
+
+  #button-area {
+    margin: 2px auto !important;
+  }
+
+  #button-area button {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+    min-width: 64px !important;
+  }
+
+  #log-area {
+    width: 94% !important;
+    margin: 6px auto !important;
+    font-size: 11px !important;
+  }
+
+  #log-area h2 {
+    font-size: 15px !important;
+    margin: 3px 0 !important;
+  }
+
+  #log {
+    max-height: 90px !important;
+    min-height: 60px !important;
+    padding: 6px !important;
+  }
+}
