@@ -980,90 +980,6 @@ hr {
   color: #111;
 }
 
-/* スマホ */
-
-@media (max-width: 900px) {
-  #table-center {
-    height: 680px;
-  }
-
-  #cpu-left {
-    left: -4%;
-  }
-
-  #cpu-right {
-    right: -4%;
-  }
-
-  .cpu-back-card {
-    width: 42px;
-    height: 60px;
-  }
-
-  #table-zone {
-    gap: 20px;
-  }
-
-  #hand {
-    overflow-x: auto;
-    justify-content: flex-start;
-  }
-
-  #hand .hand-card-button {
-    width: 72px;
-    height: 104px;
-    min-width: 72px;
-  }
-
-  #hand .hand-card-button .card-corner {
-    font-size: 14px;
-  }
-
-  #hand .hand-card-button .card-center-symbol,
-  #hand .hand-card-button .card-center {
-    font-size: 48px;
-  }
-
-  #hand .hand-card-button .face-icon {
-    font-size: 32px;
-  }
-
-  #hand .hand-card-button .face-label,
-  #hand .hand-card-button .face-suit {
-    font-size: 22px;
-  }
-
-  #hand .hand-card-button .joker-star {
-    font-size: 46px;
-  }
-
-  .role-list {
-    grid-template-columns: 1fr;
-  }
-
-  #suit-select {
-    width: 340px;
-    padding: 18px;
-  }
-
-  #suit-select button {
-    width: 64px;
-    height: 64px;
-    font-size: 38px;
-  }
-
-  #don-effect {
-    font-size: 48px;
-  }
-
-  .suit-burst {
-    font-size: 120px;
-  }
-
-  .skip-flow-effect {
-    font-size: 52px;
-  }
-}
 /* =========================
    追加：手札重なり
 ========================= */
@@ -1125,7 +1041,7 @@ hr {
   height: 190px;
   transform: translate(-50%, -50%) scale(0.35);
   opacity: 0;
-  z-index: 99999;
+  z-index: 999999 !important;
   pointer-events: none;
   transition:
     transform 0.25s ease,
@@ -1146,38 +1062,14 @@ hr {
 
 
 /* =========================
-   スマホ追加調整
+   追加：演出最前面
 ========================= */
-
-@media (max-width: 900px) {
-  #hand .hand-card-button {
-    margin-left: -18px;
-  }
-
-  #hand .hand-card-button:first-child {
-    margin-left: 0;
-  }
-
-  .cpu-preview-card {
-    width: 96px;
-    height: 140px;
-  }
-}
-/* ========================================
-   GitHub版 緊急パッチ
-   演出最前面 + スマホ最適化
-======================================== */
-
-/* 演出を絶対前面へ */
 
 #don-effect,
 .skip-flow-effect,
-.suit-burst,
-.cpu-preview-card {
+.suit-burst {
   z-index: 999999 !important;
 }
-
-/* 演出が見切れないように */
 
 #don-effect {
   position: fixed !important;
@@ -1187,117 +1079,9 @@ hr {
   pointer-events: none;
 }
 
-/* CPUカードプレビュー強化 */
 
-.cpu-preview-card {
-  pointer-events: none;
-}
-
-/* ===========================
-   スマホ最適化
-=========================== */
-
-@media (max-width: 768px) {
-
-  h1 {
-    font-size: 28px;
-  }
-
-  #setting-area {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  #table-center {
-    transform: scale(0.92);
-    transform-origin: center top;
-  }
-
-  #cpu-top .cpu-name,
-  #cpu-left .cpu-name,
-  #cpu-right .cpu-name {
-    font-size: 14px;
-  }
-
-  #score-area {
-    font-size: 13px;
-  }
-
-  #turn-area {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  #button-area {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  #button-area button {
-    min-width: 90px;
-    min-height: 44px;
-    font-size: 16px;
-  }
-
-  #log-area {
-    max-height: 220px;
-    overflow-y: auto;
-  }
-
-  /* 手札を見やすく */
-
-  #hand {
-    justify-content: flex-start;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 12px;
-  }
-
-  #hand::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  #hand::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.4);
-    border-radius: 999px;
-  }
-
-  #hand .hand-card-button {
-    min-width: 68px;
-    width: 68px;
-    height: 100px;
-  }
-
-  /* CPUカード小さめ */
-
-  .cpu-back-card {
-    width: 30px;
-    height: 42px;
-  }
-
-  /* 演出サイズ調整 */
-
-  #don-effect {
-    font-size: 42px !important;
-  }
-
-  .skip-flow-effect {
-    font-size: 40px !important;
-  }
-
-  .suit-burst {
-    font-size: 90px !important;
-  }
-
-  .cpu-preview-card {
-    width: 90px;
-    height: 130px;
-  }
-}
 /* =========================
-   スマホ表示 最終調整
+   スマホ：統合調整
 ========================= */
 
 @media (max-width: 768px) {
@@ -1305,11 +1089,64 @@ hr {
     overflow-x: hidden;
   }
 
-  h1,
-  #score-area,
-  #setting-area,
+  h1 {
+    display: block !important;
+    font-size: 24px !important;
+    margin: 6px 0 !important;
+  }
+
+  #score-area {
+    display: flex !important;
+    gap: 4px !important;
+    margin: 4px auto !important;
+    font-size: 11px !important;
+  }
+
+  .score-box {
+    min-width: auto !important;
+    padding: 5px 7px !important;
+    font-size: 11px !important;
+  }
+
+  #setting-area {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin: 4px auto !important;
+    font-size: 12px !important;
+  }
+
+  #cpu-level-area,
+  #auto-cpu-area {
+    padding: 5px 7px !important;
+  }
+
+  #cpu-level {
+    font-size: 12px !important;
+    padding: 2px 4px !important;
+  }
+
   #role-area {
-    display: none !important;
+    display: block !important;
+    width: 94% !important;
+    padding: 6px !important;
+    margin: 4px auto !important;
+    font-size: 11px !important;
+  }
+
+  #role-area h2 {
+    font-size: 15px !important;
+    margin: 2px 0 5px !important;
+  }
+
+  .role-list {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 4px !important;
+  }
+
+  .role-list div {
+    padding: 4px 5px !important;
   }
 
   #turn-area {
@@ -1318,23 +1155,23 @@ hr {
   }
 
   #table-center {
-    height: 500px !important;
+    height: 410px !important;
     margin-top: 0 !important;
     transform: none !important;
   }
 
   #cpu-top {
-    top: 10px !important;
+    top: 4px !important;
   }
 
   #cpu-left {
     left: 2px !important;
-    top: 42% !important;
+    top: 45% !important;
   }
 
   #cpu-right {
     right: 2px !important;
-    top: 42% !important;
+    top: 45% !important;
   }
 
   .cpu-name {
@@ -1348,7 +1185,7 @@ hr {
   }
 
   #table-area {
-    top: 48% !important;
+    top: 50% !important;
   }
 
   #table-zone {
@@ -1375,150 +1212,6 @@ hr {
   }
 
   #player-area {
-    margin-top: -35px !important;
-  }
-
-  #number-area {
-    font-size: 28px !important;
-    margin: 4px auto !important;
-  }
-
-  #suit-area {
-    width: 94% !important;
-    font-size: 14px !important;
-    padding: 8px !important;
-    margin: 4px auto !important;
-    white-space: nowrap;
-    overflow-x: auto;
-  }
-
-  #hand {
-    margin: 4px auto !important;
-    padding: 8px 0 10px 14px !important;
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-  }
-
-  #hand .hand-card-button {
-    width: 68px !important;
-    height: 98px !important;
-    min-width: 68px !important;
-    margin-left: -16px !important;
-  }
-
-  #hand .hand-card-button:first-child {
-    margin-left: 0 !important;
-  }
-
-  #button-area {
-    margin-top: 2px !important;
-  }
-
-  #button-area button {
-    padding: 9px 13px !important;
-    font-size: 15px !important;
-    min-width: 70px !important;
-  }
-
-  #log-area {
-    display: none !important;
-  }
-
-  #don-effect {
-    font-size: 42px !important;
-  }
-}
-/* =========================
-   スマホ表示 再調整
-   役札・設定・ログを残す
-========================= */
-
-@media (max-width: 768px) {
-  h1,
-  #score-area,
-  #setting-area,
-  #role-area,
-  #log-area {
-    display: block !important;
-  }
-
-  h1 {
-    font-size: 24px !important;
-    margin: 6px 0 !important;
-  }
-
-  #score-area {
-    display: flex !important;
-    gap: 4px !important;
-    margin: 4px auto !important;
-    font-size: 11px !important;
-  }
-
-  .score-box {
-    min-width: auto !important;
-    padding: 5px 7px !important;
-    font-size: 11px !important;
-  }
-
-  #setting-area {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 6px !important;
-    margin: 4px auto !important;
-    font-size: 12px !important;
-  }
-
-  #cpu-level-area,
-  #auto-cpu-area {
-    padding: 5px 7px !important;
-  }
-
-  #cpu-level {
-    font-size: 12px !important;
-    padding: 2px 4px !important;
-  }
-
-  #role-area {
-    width: 94% !important;
-    padding: 6px !important;
-    margin: 4px auto !important;
-    font-size: 11px !important;
-  }
-
-  #role-area h2 {
-    font-size: 15px !important;
-    margin: 2px 0 5px !important;
-  }
-
-  .role-list {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 4px !important;
-  }
-
-  .role-list div {
-    padding: 4px 5px !important;
-  }
-
-  #table-center {
-    height: 410px !important;
-    margin-top: 0 !important;
-    transform: none !important;
-  }
-
-  #cpu-top {
-    top: 4px !important;
-  }
-
-  #cpu-left,
-  #cpu-right {
-    top: 45% !important;
-  }
-
-  #table-area {
-    top: 50% !important;
-  }
-
-  #player-area {
     margin-top: -20px !important;
   }
 
@@ -1537,11 +1230,60 @@ hr {
   }
 
   #hand {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
     margin: 2px auto !important;
     padding: 6px 0 8px 14px !important;
   }
 
+  #hand::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  #hand::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 999px;
+  }
+
+  #hand .hand-card-button {
+    width: 68px !important;
+    height: 98px !important;
+    min-width: 68px !important;
+    margin-left: -16px !important;
+  }
+
+  #hand .hand-card-button:first-child {
+    margin-left: 0 !important;
+  }
+
+  #hand .hand-card-button .card-corner {
+    font-size: 14px !important;
+  }
+
+  #hand .hand-card-button .card-center-symbol,
+  #hand .hand-card-button .card-center {
+    font-size: 48px !important;
+  }
+
+  #hand .hand-card-button .face-icon {
+    font-size: 32px !important;
+  }
+
+  #hand .hand-card-button .face-label,
+  #hand .hand-card-button .face-suit {
+    font-size: 22px !important;
+  }
+
+  #hand .hand-card-button .joker-star {
+    font-size: 46px !important;
+  }
+
   #button-area {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
     margin: 2px auto !important;
   }
 
@@ -1549,9 +1291,11 @@ hr {
     padding: 8px 10px !important;
     font-size: 14px !important;
     min-width: 64px !important;
+    min-height: 40px !important;
   }
 
   #log-area {
+    display: block !important;
     width: 94% !important;
     margin: 6px auto !important;
     font-size: 11px !important;
@@ -1567,4 +1311,33 @@ hr {
     min-height: 60px !important;
     padding: 6px !important;
   }
+
+  #suit-select {
+    width: 340px !important;
+    padding: 18px !important;
+  }
+
+  #suit-select button {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 38px !important;
+  }
+
+  #don-effect {
+    font-size: 42px !important;
+  }
+
+  .skip-flow-effect {
+    font-size: 40px !important;
+  }
+
+  .suit-burst {
+    font-size: 90px !important;
+  }
+
+  .cpu-preview-card {
+    width: 90px !important;
+    height: 130px !important;
+  }
 }
+
