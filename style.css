@@ -1340,4 +1340,60 @@ hr {
     height: 130px !important;
   }
 }
+/* =========================
+   スマホ版：演出表示強制
+========================= */
 
+@media (max-width: 768px) {
+  #don-effect {
+    display: block;
+    position: fixed !important;
+    left: 50% !important;
+    top: 42% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999999 !important;
+    font-size: 42px !important;
+    line-height: 1.1;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .skip-flow-effect {
+    position: fixed !important;
+    top: 38% !important;
+    z-index: 9999999 !important;
+    font-size: 42px !important;
+    pointer-events: none;
+  }
+
+  .skip-wind-effect {
+    position: fixed !important;
+    top: 40% !important;
+    z-index: 9999998 !important;
+    pointer-events: none;
+  }
+
+  .suit-burst {
+    position: fixed !important;
+    left: 50% !important;
+    top: 42% !important;
+    z-index: 9999999 !important;
+    font-size: 100px !important;
+    pointer-events: none;
+  }
+
+  .flash-don,
+  .flash-counter,
+  .flash-draw-don,
+  .flash-draw-counter,
+  .flash-joker {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999997 !important;
+    pointer-events: none;
+  }
+
+  .cpu-preview-card {
+    z-index: 9999999 !important;
+  }
+}
