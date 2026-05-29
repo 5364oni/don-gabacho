@@ -1,276 +1,15 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>ドン・ガバチョ</title>
-
-  <link rel="stylesheet" href="style.css" />
-</head>
-
-<body>
-
-  <div id="game-area">
-
-    <h1>ドン・ガバチョ</h1>
-
-    <!-- 点数 -->
-    <div id="score-area"></div>
-
-    <hr />
-
-    <!-- 設定 -->
-    <div id="setting-area">
-
-      <div id="cpu-level-area">
-        CPU強さ：
-
-        <select id="cpu-level">
-          <option value="easy">
-            弱い
-          </option>
-
-          <option
-            value="normal"
-            selected
-          >
-            普通
-          </option>
-
-          <option value="hard">
-            強い
-          </option>
-        </select>
-      </div>
-
-      <div id="auto-cpu-area">
-        <label>
-          <input
-            type="checkbox"
-            id="auto-cpu"
-          />
-
-          CPU自動進行
-        </label>
-      </div>
-
-    </div>
-
-    <!-- 役 -->
-    <div id="role-area">
-
-      <h2>役札</h2>
-
-      <div class="role-list">
-
-        <div>
-          A：スキップ / ドロー中は返し札
-        </div>
-
-        <div>
-          2：ドロー2
-        </div>
-
-        <div>
-          7：リバース
-        </div>
-
-        <div>
-          8：ドロー2
-        </div>
-
-        <div>
-          J：マーク指定
-        </div>
-
-        <div>
-          Joker：ドロー4 / 数字0
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- 現在 -->
-    <div id="turn-area"></div>
-
-    <!-- 卓 -->
-<div id="table-center">
-
-  <!-- CPU上 -->
-  <div
-    id="cpu-top"
-    class="cpu-seat"
-  >
-
-    <div
-      class="cpu-name"
-      id="cpu2-name"
-    >
-      CPU2
-    </div>
-
-    <div
-      class="cpu-cards cpu-top-cards"
-      id="cpu2-cards"
-    ></div>
-
-  </div>
-
-  <!-- CPU左 -->
-  <div
-    id="cpu-left"
-    class="cpu-seat"
-  >
-
-    <div
-      class="cpu-name"
-      id="cpu1-name"
-    >
-      CPU1
-    </div>
-
-    <div
-      class="cpu-cards cpu-left-cards"
-      id="cpu1-cards"
-    ></div>
-
-  </div>
-
-  <!-- CPU右 -->
-  <div
-    id="cpu-right"
-    class="cpu-seat"
-  >
-
-    <div
-      class="cpu-name"
-      id="cpu3-name"
-    >
-      CPU3
-    </div>
-
-    <div
-      class="cpu-cards cpu-right-cards"
-      id="cpu3-cards"
-    ></div>
-
-  </div>
-
-  <!-- 中央 -->
-  <div id="table-area"></div>
-
-</div>
-    <!-- プレイヤー -->
-    <div id="player-area">
-
-      <div id="number-area"></div>
-
-      <div id="suit-area"></div>
-
-      <div id="result-area"></div>
-
-      <!-- 手札 -->
-      <div id="hand"></div>
-
-      <!-- ボタン -->
-      <div id="button-area">
-
-        <button id="play-button">
-          出す
-        </button>
-
-        <button id="draw-button">
-          引く
-        </button>
-
-        <button id="don-button">
-          ドン！
-        </button>
-
-        <button id="next-button">
-          次へ
-        </button>
-
-        <button
-          id="new-round-button"
-          class="hidden"
-        >
-          次ラウンド
-        </button>
-
-        <button
-          id="new-game-button"
-          class="hidden"
-        >
-          新しいゲーム
-        </button>
-
-      </div>
-
-    </div>
-
-    <!-- マーク選択 -->
-    <div
-      id="suit-select"
-      class="hidden"
-    >
-
-      <h2>
-        マークを選択
-      </h2>
-
-      <button data-suit="♠">
-        ♠
-      </button>
-
-      <button data-suit="♥">
-        ♥
-      </button>
-
-      <button data-suit="♦">
-        ♦
-      </button>
-
-      <button data-suit="♣">
-        ♣
-      </button>
-
-    </div>
-
-    <!-- ログ -->
-    <div id="log-area">
-
-      <h2>
-        ログ
-      </h2>
-
-      <div id="log"></div>
-
-    </div>
-
-  </div>
-
-  <!-- JS -->
-
-  <script src="rules.js"></script>
-
-  <script src="effects.js"></script>
-
-  <script src="cpu.js"></script>
-
-  <script src="script.js"></script>
-
-</body>
-</html>
-/* =========================
-   スマホ対応：演出強制表示
-========================= */
+function getEffectArea() {
+  let effect = document.getElementById("don-effect");
+
+  if (!effect) {
+    effect = document.createElement("div");
+    effect.id = "don-effect";
+    effect.className = "hidden";
+    document.body.appendChild(effect);
+  }
+
+  return effect;
+}
 
 function showBigEffect(text, effectClass) {
   const effect = getEffectArea();
@@ -279,34 +18,201 @@ function showBigEffect(text, effectClass) {
   effect.classList.add(effectClass);
 
   effect.textContent = text;
+  effect.style.animation = "none";
 
-  effect.style.display = "block";
-  effect.style.position = "fixed";
-  effect.style.left = "50%";
-  effect.style.top = "42%";
-  effect.style.transform = "translate(-50%, -50%) scale(0.2)";
-  effect.style.zIndex = "99999999";
-  effect.style.fontSize = window.innerWidth <= 768 ? "42px" : "72px";
-  effect.style.fontWeight = "900";
-  effect.style.pointerEvents = "none";
-  effect.style.opacity = "0";
-  effect.style.textShadow =
-    "0 0 12px white, 0 0 24px white, 4px 4px 0 black";
-  effect.style.transition =
-    "transform 0.2s ease-out, opacity 0.2s ease-out";
+  void effect.offsetWidth;
 
-  requestAnimationFrame(() => {
-    effect.style.opacity = "1";
-    effect.style.transform = "translate(-50%, -50%) scale(1.25)";
-  });
-
-  setTimeout(() => {
-    effect.style.transform = "translate(-50%, -50%) scale(1.6)";
-    effect.style.opacity = "0";
-  }, 650);
+  effect.style.animation = "donPop 0.9s ease-out forwards";
 
   setTimeout(() => {
     effect.className = "hidden";
-    effect.style.display = "none";
-  }, 950);
+  }, 900);
+}
+
+function showSkipFlowEffect() {
+  const skip = document.createElement("div");
+  skip.className = "skip-flow-effect";
+  skip.textContent = "SKIP!!";
+
+  const wind = document.createElement("div");
+  wind.className = "skip-wind-effect";
+
+  document.body.appendChild(wind);
+  document.body.appendChild(skip);
+
+  setTimeout(() => {
+    skip.remove();
+    wind.remove();
+  }, 1500);
+}
+
+function addTempClass(element, className, duration) {
+  if (!element) return;
+
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+
+  setTimeout(() => {
+    element.classList.remove(className);
+  }, duration);
+}
+
+function shakeScreen() {
+  addTempClass(document.body, "screen-shake", 450);
+}
+
+function flashScreen(className, duration) {
+  const flash = document.createElement("div");
+
+  flash.className = className;
+  document.body.appendChild(flash);
+
+  setTimeout(() => {
+    flash.remove();
+  }, duration);
+}
+
+function rotateTable() {
+  const tableCenter = document.getElementById("table-center");
+
+  addTempClass(tableCenter, "table-reverse-spin", 700);
+}
+
+function bounceDeck(times) {
+  const deckCard = document.getElementById("deck-card");
+
+  if (!deckCard) return;
+
+  let count = 0;
+
+  const runBounce = () => {
+    deckCard.classList.remove("deck-bounce");
+    void deckCard.offsetWidth;
+    deckCard.classList.add("deck-bounce");
+
+    count++;
+
+    if (count < times) {
+      setTimeout(runBounce, 260);
+    }
+  };
+
+  runBounce();
+}
+
+function showSuitBurst(suit) {
+  const burst = document.createElement("div");
+
+  burst.className = "suit-burst";
+
+  if (suit === "♥" || suit === "♦") {
+    burst.classList.add("red-suit-burst");
+  } else {
+    burst.classList.add("black-suit-burst");
+  }
+
+  burst.textContent = suit || "★";
+
+  document.body.appendChild(burst);
+
+  setTimeout(() => {
+    burst.remove();
+  }, 900);
+}
+
+function showDonEffect(text) {
+  if (text && text.includes("引きドン返し")) {
+    shakeScreen();
+    flashScreen("flash-draw-counter", 450);
+    showBigEffect("DRAW COUNTER!!", "effect-draw-counter");
+    return;
+  }
+
+  if (text && text.includes("引きドン")) {
+    shakeScreen();
+    flashScreen("flash-draw-don", 420);
+    showBigEffect("DRAW DON!!", "effect-draw-don");
+    return;
+  }
+
+  if (text && text.includes("返し")) {
+    shakeScreen();
+    flashScreen("flash-counter", 420);
+    showBigEffect("COUNTER!!", "effect-counter");
+    return;
+  }
+
+  shakeScreen();
+  flashScreen("flash-don", 380);
+  showBigEffect("DON!!", "effect-don");
+}
+
+function showJokerEffect() {
+  flashScreen("flash-joker", 650);
+  shakeScreen();
+  showBigEffect("JOKER!!", "effect-joker");
+}
+
+function showSkipEffect() {
+  showSkipFlowEffect();
+}
+
+function showDraw2Effect() {
+  showBigEffect("DRAW 2!!", "effect-draw2");
+  bounceDeck(2);
+}
+
+function showReverseEffect() {
+  showBigEffect("REVERSE!!", "effect-reverse");
+  rotateTable();
+}
+
+function showMarkChangeEffect(suit) {
+  showBigEffect("MARK CHANGE!!", "effect-mark");
+
+  if (suit) {
+    showSuitBurst(suit);
+  }
+}
+
+function showCardFlyEffect(cardsText) {
+  const flyCard = document.createElement("div");
+
+  flyCard.className = "card-fly-effect";
+  flyCard.textContent = cardsText;
+
+  document.body.appendChild(flyCard);
+
+  setTimeout(() => {
+    flyCard.classList.add("card-fly-start");
+  }, 10);
+
+  setTimeout(() => {
+    flyCard.remove();
+  }, 750);
+}
+
+function showCardPreviewEffect(card) {
+  if (typeof cardHtml !== "function") return;
+  if (!card) return;
+
+  const preview = document.createElement("div");
+
+  preview.className = "cpu-preview-card";
+  preview.innerHTML = cardHtml(card);
+
+  document.body.appendChild(preview);
+
+  requestAnimationFrame(() => {
+    preview.classList.add("show");
+  });
+
+  setTimeout(() => {
+    preview.classList.remove("show");
+
+    setTimeout(() => {
+      preview.remove();
+    }, 300);
+  }, 700);
 }
