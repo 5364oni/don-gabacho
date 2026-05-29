@@ -1163,3 +1163,136 @@ hr {
     height: 140px;
   }
 }
+/* ========================================
+   GitHub版 緊急パッチ
+   演出最前面 + スマホ最適化
+======================================== */
+
+/* 演出を絶対前面へ */
+
+#don-effect,
+.skip-flow-effect,
+.suit-burst,
+.cpu-preview-card {
+  z-index: 999999 !important;
+}
+
+/* 演出が見切れないように */
+
+#don-effect {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none;
+}
+
+/* CPUカードプレビュー強化 */
+
+.cpu-preview-card {
+  pointer-events: none;
+}
+
+/* ===========================
+   スマホ最適化
+=========================== */
+
+@media (max-width: 768px) {
+
+  h1 {
+    font-size: 28px;
+  }
+
+  #setting-area {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #table-center {
+    transform: scale(0.92);
+    transform-origin: center top;
+  }
+
+  #cpu-top .cpu-name,
+  #cpu-left .cpu-name,
+  #cpu-right .cpu-name {
+    font-size: 14px;
+  }
+
+  #score-area {
+    font-size: 13px;
+  }
+
+  #turn-area {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  #button-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  #button-area button {
+    min-width: 90px;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  #log-area {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  /* 手札を見やすく */
+
+  #hand {
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 12px;
+  }
+
+  #hand::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  #hand::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 999px;
+  }
+
+  #hand .hand-card-button {
+    min-width: 68px;
+    width: 68px;
+    height: 100px;
+  }
+
+  /* CPUカード小さめ */
+
+  .cpu-back-card {
+    width: 30px;
+    height: 42px;
+  }
+
+  /* 演出サイズ調整 */
+
+  #don-effect {
+    font-size: 42px !important;
+  }
+
+  .skip-flow-effect {
+    font-size: 40px !important;
+  }
+
+  .suit-burst {
+    font-size: 90px !important;
+  }
+
+  .cpu-preview-card {
+    width: 90px;
+    height: 130px;
+  }
+}
