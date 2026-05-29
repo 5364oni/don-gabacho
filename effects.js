@@ -1,218 +1,270 @@
-function getEffectArea() {
-  let effect = document.getElementById("don-effect");
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
 
-  if (!effect) {
-    effect = document.createElement("div");
-    effect.id = "don-effect";
-    effect.className = "hidden";
-    document.body.appendChild(effect);
-  }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-  return effect;
-}
+  <title>ドン・ガバチョ</title>
 
-function showBigEffect(text, effectClass) {
-  const effect = getEffectArea();
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  effect.className = "";
-  effect.classList.add(effectClass);
+<body>
 
-  effect.textContent = text;
-  effect.style.animation = "none";
+  <div id="game-area">
 
-  void effect.offsetWidth;
+    <h1>ドン・ガバチョ</h1>
 
-  effect.style.animation = "donPop 0.9s ease-out forwards";
+    <!-- 点数 -->
+    <div id="score-area"></div>
 
-  setTimeout(() => {
-    effect.className = "hidden";
-  }, 900);
-}
+    <hr />
 
-function showSkipFlowEffect() {
-  const skip = document.createElement("div");
-  skip.className = "skip-flow-effect";
-  skip.textContent = "SKIP!!";
+    <!-- 設定 -->
+    <div id="setting-area">
 
-  const wind = document.createElement("div");
-  wind.className = "skip-wind-effect";
+      <div id="cpu-level-area">
+        CPU強さ：
 
-  document.body.appendChild(wind);
-  document.body.appendChild(skip);
+        <select id="cpu-level">
+          <option value="easy">
+            弱い
+          </option>
 
-  setTimeout(() => {
-    skip.remove();
-    wind.remove();
-  }, 1500);
-}
+          <option
+            value="normal"
+            selected
+          >
+            普通
+          </option>
 
-function addTempClass(element, className, duration) {
-  if (!element) return;
+          <option value="hard">
+            強い
+          </option>
+        </select>
+      </div>
 
-  element.classList.remove(className);
-  void element.offsetWidth;
-  element.classList.add(className);
+      <div id="auto-cpu-area">
+        <label>
+          <input
+            type="checkbox"
+            id="auto-cpu"
+          />
 
-  setTimeout(() => {
-    element.classList.remove(className);
-  }, duration);
-}
+          CPU自動進行
+        </label>
+      </div>
 
-function shakeScreen() {
-  addTempClass(document.body, "screen-shake", 450);
-}
+    </div>
 
-function flashScreen(className, duration) {
-  const flash = document.createElement("div");
+    <!-- 役 -->
+    <div id="role-area">
 
-  flash.className = className;
-  document.body.appendChild(flash);
+      <h2>役札</h2>
 
-  setTimeout(() => {
-    flash.remove();
-  }, duration);
-}
+      <div class="role-list">
 
-function rotateTable() {
-  const tableCenter = document.getElementById("table-center");
+        <div>
+          A：スキップ / ドロー中は返し札
+        </div>
 
-  addTempClass(tableCenter, "table-reverse-spin", 700);
-}
+        <div>
+          2：ドロー2
+        </div>
 
-function bounceDeck(times) {
-  const deckCard = document.getElementById("deck-card");
+        <div>
+          7：リバース
+        </div>
 
-  if (!deckCard) return;
+        <div>
+          8：ドロー2
+        </div>
 
-  let count = 0;
+        <div>
+          J：マーク指定
+        </div>
 
-  const runBounce = () => {
-    deckCard.classList.remove("deck-bounce");
-    void deckCard.offsetWidth;
-    deckCard.classList.add("deck-bounce");
+        <div>
+          Joker：ドロー4 / 数字0
+        </div>
 
-    count++;
+      </div>
 
-    if (count < times) {
-      setTimeout(runBounce, 260);
-    }
-  };
+    </div>
 
-  runBounce();
-}
+    <!-- 現在 -->
+    <div id="turn-area"></div>
 
-function showSuitBurst(suit) {
-  const burst = document.createElement("div");
+    <!-- 卓 -->
+<div id="table-center">
 
-  burst.className = "suit-burst";
+  <!-- CPU上 -->
+  <div
+    id="cpu-top"
+    class="cpu-seat"
+  >
 
-  if (suit === "♥" || suit === "♦") {
-    burst.classList.add("red-suit-burst");
-  } else {
-    burst.classList.add("black-suit-burst");
-  }
+    <div
+      class="cpu-name"
+      id="cpu2-name"
+    >
+      CPU2
+    </div>
 
-  burst.textContent = suit || "★";
+    <div
+      class="cpu-cards cpu-top-cards"
+      id="cpu2-cards"
+    ></div>
 
-  document.body.appendChild(burst);
+  </div>
 
-  setTimeout(() => {
-    burst.remove();
-  }, 900);
-}
+  <!-- CPU左 -->
+  <div
+    id="cpu-left"
+    class="cpu-seat"
+  >
 
-function showDonEffect(text) {
-  if (text && text.includes("引きドン返し")) {
-    shakeScreen();
-    flashScreen("flash-draw-counter", 450);
-    showBigEffect("DRAW COUNTER!!", "effect-draw-counter");
-    return;
-  }
+    <div
+      class="cpu-name"
+      id="cpu1-name"
+    >
+      CPU1
+    </div>
 
-  if (text && text.includes("引きドン")) {
-    shakeScreen();
-    flashScreen("flash-draw-don", 420);
-    showBigEffect("DRAW DON!!", "effect-draw-don");
-    return;
-  }
+    <div
+      class="cpu-cards cpu-left-cards"
+      id="cpu1-cards"
+    ></div>
 
-  if (text && text.includes("返し")) {
-    shakeScreen();
-    flashScreen("flash-counter", 420);
-    showBigEffect("COUNTER!!", "effect-counter");
-    return;
-  }
+  </div>
 
-  shakeScreen();
-  flashScreen("flash-don", 380);
-  showBigEffect("DON!!", "effect-don");
-}
+  <!-- CPU右 -->
+  <div
+    id="cpu-right"
+    class="cpu-seat"
+  >
 
-function showJokerEffect() {
-  flashScreen("flash-joker", 650);
-  shakeScreen();
-  showBigEffect("JOKER!!", "effect-joker");
-}
+    <div
+      class="cpu-name"
+      id="cpu3-name"
+    >
+      CPU3
+    </div>
 
-function showSkipEffect() {
-  showSkipFlowEffect();
-}
+    <div
+      class="cpu-cards cpu-right-cards"
+      id="cpu3-cards"
+    ></div>
 
-function showDraw2Effect() {
-  showBigEffect("DRAW 2!!", "effect-draw2");
-  bounceDeck(2);
-}
+  </div>
 
-function showReverseEffect() {
-  showBigEffect("REVERSE!!", "effect-reverse");
-  rotateTable();
-}
+  <!-- 中央 -->
+  <div id="table-area"></div>
 
-function showMarkChangeEffect(suit) {
-  showBigEffect("MARK CHANGE!!", "effect-mark");
+</div>
+    <!-- プレイヤー -->
+    <div id="player-area">
 
-  if (suit) {
-    showSuitBurst(suit);
-  }
-}
+      <div id="number-area"></div>
 
-function showCardFlyEffect(cardsText) {
-  const flyCard = document.createElement("div");
+      <div id="suit-area"></div>
 
-  flyCard.className = "card-fly-effect";
-  flyCard.textContent = cardsText;
+      <div id="result-area"></div>
 
-  document.body.appendChild(flyCard);
+      <!-- 手札 -->
+      <div id="hand"></div>
 
-  setTimeout(() => {
-    flyCard.classList.add("card-fly-start");
-  }, 10);
+      <!-- ボタン -->
+      <div id="button-area">
 
-  setTimeout(() => {
-    flyCard.remove();
-  }, 750);
-}
+        <button id="play-button">
+          出す
+        </button>
 
-function showCardPreviewEffect(card) {
-  if (typeof cardHtml !== "function") return;
-  if (!card) return;
+        <button id="draw-button">
+          引く
+        </button>
 
-  const preview = document.createElement("div");
+        <button id="don-button">
+          ドン！
+        </button>
 
-  preview.className = "cpu-preview-card";
-  preview.innerHTML = cardHtml(card);
+        <button id="next-button">
+          次へ
+        </button>
 
-  document.body.appendChild(preview);
+        <button
+          id="new-round-button"
+          class="hidden"
+        >
+          次ラウンド
+        </button>
 
-  requestAnimationFrame(() => {
-    preview.classList.add("show");
-  });
+        <button
+          id="new-game-button"
+          class="hidden"
+        >
+          新しいゲーム
+        </button>
 
-  setTimeout(() => {
-    preview.classList.remove("show");
+      </div>
 
-    setTimeout(() => {
-      preview.remove();
-    }, 300);
-  }, 700);
-}
+    </div>
+
+    <!-- マーク選択 -->
+    <div
+      id="suit-select"
+      class="hidden"
+    >
+
+      <h2>
+        マークを選択
+      </h2>
+
+      <button data-suit="♠">
+        ♠
+      </button>
+
+      <button data-suit="♥">
+        ♥
+      </button>
+
+      <button data-suit="♦">
+        ♦
+      </button>
+
+      <button data-suit="♣">
+        ♣
+      </button>
+
+    </div>
+
+    <!-- ログ -->
+    <div id="log-area">
+
+      <h2>
+        ログ
+      </h2>
+
+      <div id="log"></div>
+
+    </div>
+
+  </div>
+
+  <!-- JS -->
+
+  <script src="rules.js"></script>
+
+  <script src="effects.js"></script>
+
+  <script src="cpu.js"></script>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
