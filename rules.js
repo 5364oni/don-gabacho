@@ -1,0 +1,35 @@
+const GAME_RULES = {
+
+  // 基本設定
+  START_SCORE: 3000,
+  BASE_RATE: 10,
+  MAX_ROUNDS: 4,
+
+  // CPU
+  CPU_AUTO_DELAY: 800,
+
+  // ドン倍率
+  DON_MULTIPLIER: 1,
+  DON_COUNTER_MULTIPLIER: 2,
+
+  // 引きドン
+  HIKI_DON_MULTIPLIER: 2,
+  HIKI_DON_COUNTER_MULTIPLIER: 4,
+
+  // 開幕ドン
+  OPENING_DON_MULTIPLIER: 5,
+
+  // 親倍率
+  PARENT_BONUS: 1.5,
+
+  // Joker倍率
+  JOKER_MULTIPLIER: 2,
+
+  // 演出
+  ENABLE_DON_EFFECT: true,
+  ENABLE_JOKER_EFFECT: true,
+
+  // CPU多枚出し
+  CPU_MULTI_PLAY: true
+
+};
