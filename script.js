@@ -507,7 +507,7 @@ function drawCard(player) {
     currentRate *= 2;
 
     addLog("山札を作り直しました");
-    addLog("レートアップ！ 現在 " + currentRate + "倍");
+    addLog("レートアップ！ 現在 " + currentRate + "点");
   }
 
   if (deck.length === 0) return;
@@ -804,7 +804,14 @@ function finishRound(winnerIndexes, winType, baseMultiplier, payerIndexes) {
 
     addLog(winner.name + " が " + winType);
     addLog("基本倍率：" + baseMultiplier + "倍");
-    addLog("最終倍率：" + finalMultiplier + "倍");
+    const deckMultiplier =
+  currentRate / BASE_RATE;
+
+const totalMultiplier =
+  deckMultiplier * finalMultiplier;
+  addLog("山札倍率：" + deckMultiplier + "倍");
+addLog("役倍率：" + finalMultiplier + "倍");
+addLog("合計倍率：" + totalMultiplier + "倍");
     addLog("残り手札合計：" + totalCards + "枚");
 
     payerIndexes.forEach(payerIndex => {
@@ -982,7 +989,7 @@ function updateTable() {
     directionText +
     " / レート：" +
     currentRate +
-    "倍 / 指定：" +
+    "点 / 指定：" +
     currentSuit +
     " / 山札：" +
     deck.length +
