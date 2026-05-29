@@ -504,7 +504,10 @@ function drawCard(player) {
     discardPile = [];
     shuffle(deck);
 
+    currentRate *= 2;
+
     addLog("山札を作り直しました");
+    addLog("レートアップ！ 現在 " + currentRate + "倍");
   }
 
   if (deck.length === 0) return;
@@ -977,7 +980,9 @@ function updateTable() {
     players[parentIndex].name +
     " / 方向：" +
     directionText +
-    " / 指定：" +
+    " / レート：" +
+    currentRate +
+    "倍 / 指定：" +
     currentSuit +
     " / 山札：" +
     deck.length +
