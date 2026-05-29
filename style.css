@@ -1296,3 +1296,135 @@ hr {
     height: 130px;
   }
 }
+/* =========================
+   スマホ表示 最終調整
+========================= */
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  h1,
+  #score-area,
+  #setting-area,
+  #role-area {
+    display: none !important;
+  }
+
+  #turn-area {
+    font-size: 18px !important;
+    margin: 2px auto !important;
+  }
+
+  #table-center {
+    height: 500px !important;
+    margin-top: 0 !important;
+    transform: none !important;
+  }
+
+  #cpu-top {
+    top: 10px !important;
+  }
+
+  #cpu-left {
+    left: 2px !important;
+    top: 42% !important;
+  }
+
+  #cpu-right {
+    right: 2px !important;
+    top: 42% !important;
+  }
+
+  .cpu-name {
+    font-size: 15px !important;
+    padding: 6px 10px !important;
+  }
+
+  .cpu-back-card {
+    width: 34px !important;
+    height: 48px !important;
+  }
+
+  #table-area {
+    top: 48% !important;
+  }
+
+  #table-zone {
+    gap: 18px !important;
+  }
+
+  #deck-card {
+    width: 70px !important;
+    height: 100px !important;
+  }
+
+  #deck-count {
+    font-size: 16px !important;
+  }
+
+  #table-stack {
+    width: 120px !important;
+    height: 160px !important;
+  }
+
+  .table-card {
+    width: 82px !important;
+    height: 118px !important;
+  }
+
+  #player-area {
+    margin-top: -35px !important;
+  }
+
+  #number-area {
+    font-size: 28px !important;
+    margin: 4px auto !important;
+  }
+
+  #suit-area {
+    width: 94% !important;
+    font-size: 14px !important;
+    padding: 8px !important;
+    margin: 4px auto !important;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  #hand {
+    margin: 4px auto !important;
+    padding: 8px 0 10px 14px !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+  }
+
+  #hand .hand-card-button {
+    width: 68px !important;
+    height: 98px !important;
+    min-width: 68px !important;
+    margin-left: -16px !important;
+  }
+
+  #hand .hand-card-button:first-child {
+    margin-left: 0 !important;
+  }
+
+  #button-area {
+    margin-top: 2px !important;
+  }
+
+  #button-area button {
+    padding: 9px 13px !important;
+    font-size: 15px !important;
+    min-width: 70px !important;
+  }
+
+  #log-area {
+    display: none !important;
+  }
+
+  #don-effect {
+    font-size: 42px !important;
+  }
+}
